@@ -11,7 +11,7 @@ ADD ./UMS /root
 ENV HOSTNAME igelrmserver
 
 #Change Time setting of container
-ENV TZ=Europe/Berlin
+ENV TZ=US/Central
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 #Install some needed tools and update system
@@ -36,7 +36,6 @@ RUN apt-get update;\
 	apt-get -y install libegl1-mesa;\
 	apt-get -y install libsdl1.2-dev;\
 	apt-get -y install repo;\
-	apt-get -y install locales;\
 	apt-get -y install expect
 
 #Set environment
@@ -49,7 +48,7 @@ RUN dpkg-reconfigure --frontend noninteractive tzdata
 RUN apt-get update && apt-get -y upgrade;\
     apt-get -y install apt-utils dialog;\
     apt-get -y install icedtea-8-plugin;\
-    DEBIAN_FRONTEND=noninteractive apt-get -y install xserver-xorg;\
+    #DEBIAN_FRONTEND=noninteractive apt-get -y install xserver-xorg;\
     apt-get -y install vim;\
     apt-get -y install wget;\
     apt-get -y install libqt5core5a;\
@@ -58,13 +57,11 @@ RUN apt-get update && apt-get -y upgrade;\
     apt-get -y install patch sudo xterm
 
 #Download latest UMS
-RUN wget http://fwu.igel.com/files/IGEL_UNIVERSAL_MANAGEMENT_SUITE/LINUX/setup-igel-ums-linux_6.06.100.bin -O /root/setup-igel-ums-linux_6.06.100.bin
+RUN wget http://fwu.igel.com/files/IGEL_UNIVERSAL_MANAGEMENT_SUITE/LINUX/setup-igel-ums-linux_12.04.120.bin -O /root/setup-igel-ums-linux_12.04.120.bin
 
 #Config sshd
-RUN patch -d /etc/ssh < /root/sshd_config.patch
+#RUN patch -d /etc/ssh < /root/sshd_config.patch
 RUN useradd -m -s/bin/bash -G staff,users,sudo igel
-RUN /bin/echo -e "Igel2020\nIgel2020" | passwd igel
-
 #Install UMS
 RUN chmod 777 /root/setup-igel-ums-linux_*
 #RUN /root/script.exp
